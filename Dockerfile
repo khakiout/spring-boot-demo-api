@@ -4,7 +4,7 @@ FROM maven:3.5.3-jdk-8-alpine as build
 
 WORKDIR /app
 COPY pom.xml .
-RUN mvn dependency:go-offline
+RUN mvn dependency:go-offline install --fail-never
 
 COPY . ./
 RUN mvn package

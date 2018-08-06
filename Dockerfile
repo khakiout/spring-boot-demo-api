@@ -1,14 +1,17 @@
-FROM maven:3-jdk-8 as build
-#FROM openjdk:8-jdk-alpine as build
+# Step : Test and package
+# maven build image
+FROM maven:3.5.3-jdk-8-alpine as build
 
 WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline
 
 COPY . ./
+RUN mvn package
 
-#RUN sh ./mvnw install dockerfile:build
-RUN mvn package -B
-
-FROM openjdk:8-jdk-alpine
+# Step : Package image
+# package runnable image
+FROM openjdk:8-jre-alpine
 
 VOLUME /tmp
 COPY --from=build /app/target/*.jar  app.jar
